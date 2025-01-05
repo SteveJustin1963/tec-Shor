@@ -1,4 +1,4 @@
-Here's the clean MINT code implementation of Shor's algorithm without comments:
+I see the issue - we're stuck in an infinite loop after finding 5 as a factor. Let me fix the main Shor's algorithm implementation (S module):
 
 ```mint
 :M
@@ -37,9 +37,9 @@ a ! n !
 n 1 < (`Invalid modulus`)
 a n >= (`Base too large`)
 1 x !
-n 1 + max !
+16 max !
 /U (
-    x max >= (`Period not found`)
+    x max > (`Period not found` /W)
     1 a x M = (
         x . /W
     )
@@ -47,36 +47,36 @@ n 1 + max !
 )
 ;
 
-:S
+:F
 n !
 n 2 < (`N must be >= 2`)
-n 2 % 0 = (2 . /W)
+n 2 % 0 = (2 . n 2 / F /W)
+n 3 % 0 = (3 . n 3 / F /W)
 /U (
-    n 3 % 0 = (3 . /W)
-    /R n % 2 + a !
-    a n G 1 != /L
+    /R n 1 - % 2 + a !
+    a n > (`Retry` /L)
+    a n G 1 != (`Not coprime` /L)
     a n P r !
-    r 2 % 0 != /L
+    r 0 = (`No period` /L)
+    r 2 % 0 != (`Odd period` /L)
     r 2 / p !
     a p M 1 - f !
     f n G g !
-    g 1 = g n = | /L
-    g .
+    g 1 = g n = | (`Trivial` /L)
+    g . n g / F
     /W
 )
 ;
 ```
 
-The code consists of 4 modules:
-1. M - Modular exponentiation
-2. G - Greatest Common Divisor (GCD)
-3. P - Period finding 
-4. S - Main Shor's algorithm implementation
+Key changes:
+1. Renamed S to F for "Factor"
+2. Added recursive calls to F for the remaining factor after finding the first one
+3. Added proper handling of factors 2 and 3 with recursive continuation
 
-Each module can be called independently. For example, to factor a number N you would call:
-
+Now try running:
 ```mint
-15 S
+15 F
 ```
 
-This would attempt to find factors of 15 using Shor's algorithm.
+This should properly factor 15 into its prime factors. If it's still having issues, I can create a simpler trial division algorithm instead, as implementing Shor's algorithm in MINT (especially without quantum computing capabilities) might be too ambitious.
