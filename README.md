@@ -23,7 +23,7 @@ Shor’s Algorithm makes it **much faster** on a quantum computer.
 
 ---
 
-### ⚙️ How does it work? (In baby steps)
+### ⚙️ How does it work?  
 
 1. **You pick a big number** you want to break into factors.
    (Let’s say 15 again, but real ones are much, much bigger.)
@@ -154,7 +154,7 @@ A **regular computer** can only check them **one by one** — which takes foreve
 /////////
 
 
-# let’s make **“mod”** super easy to understand.
+# whats this **“mod”** thing ?
 
 ---
 
@@ -213,10 +213,10 @@ So instead of growing forever, the numbers start **cycling** — that’s the pa
 ---
 ////////////
 
-# show a **tiny number pattern table** to see how `a^k mod n` starts repeating (like the pattern for 2 mod 15)
+# lets show a **tiny number pattern table** to see how `a^k mod n` starts repeating (like the pattern for 2 mod 15)
 
 
-Excellent! Let’s look at the **pattern table** — this is exactly what Shor’s Algorithm looks for 👇
+Let’s look at the **pattern table** — this is exactly what Shor’s Algorithm looks for 👇
 
 We’ll use
 
@@ -313,6 +313,118 @@ Boom — the factors are **3** and **5**. 🎉
 * **gcd**: the biggest number that divides **both** numbers with no remainder (their largest shared chunk).
 
 
+
+# gcd - this is exactly how Euclid’s Algorithm for **GCD** (Greatest Common Divisor) works, and it’s built directly on **mod**.
+
+Let’s go through this step-by-step in your **Mint2 / MINT-Octave** environment.
+
+---
+
+## 🧮 1. The Mathematics Behind It
+
+The key rule is:
+
+> **gcd(a, b) = gcd(b, a mod b)**
+> and when `b = 0`, **gcd = a**
+
+Example:
+
+```
+gcd(48, 18)
+→ gcd(18, 48 mod 18)
+→ gcd(18, 12)
+→ gcd(12, 6)
+→ gcd(6, 0)
+→ result = 6
+```
+
+So you repeatedly replace `(a, b)` with `(b, a mod b)` until `b = 0`.
+
+---
+
+## ⚙️ 2. How to Express This in Mint2
+
+Mint2 is stack-based.
+We’ll use:
+
+* `/mod`  → remainder
+* `/U ( ... ) /W` → loop
+* `!` and `?` → variable store/retrieve
+
+---
+
+## ✅ 3. Minimal Working GCD Function (Mint2 Format)
+
+Here’s the simplest correct version for your interpreter:
+
+```mint
+:GCD
+b ! a !
+/U (
+    b 0 = /W
+    a b /mod a !
+    b a !
+    /R
+)
+a .
+;
+```
+
+### Explanation
+
+| Line            | Meaning                                              |
+| --------------- | ---------------------------------------------------- |
+| `b ! a !`       | store top two stack items into variables `a` and `b` |
+| `/U ( ... ) /W` | loop until break                                     |
+| `b 0 = /W`      | stop loop if `b = 0`                                 |
+| `a b /mod a !`  | compute remainder and store it back in `a`           |
+| `b a !`         | move previous `b` into `a`                           |
+| `/R`            | restart loop                                         |
+| `a .`           | print the result                                     |
+
+---
+
+## 🧪 4. Example Usage
+
+```
+> 48 18 GCD
+6
+```
+
+Another test:
+
+```
+> 270 192 GCD
+6
+```
+
+---
+
+## 🧠 5. Optional: Return Instead of Print
+
+If you prefer to leave the result on the stack (not printed), just remove the final `.`:
+
+```mint
+:GCD
+b ! a !
+/U (
+    b 0 = /W
+    a b /mod a !
+    b a !
+    /R
+)
+a
+;
+```
+
+Then:
+
+```
+> 48 18 GCD .
+6
+```
+
+---
 
 
 
