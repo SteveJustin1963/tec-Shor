@@ -560,6 +560,74 @@ n 3 % 0 = ( 3 . n 3 / :F /F /W )
 ;
 ```
 
+### no comments
+
+```
+:M
+b ! a ! n !
+1 r !
+/U (
+  b 0 > /W
+  b 2 % 0 = ( a a * n % a ! )
+  b 1 & /T = ( r a * n % r ! )
+  b 2 / b !
+)
+r .
+;
+
+:G
+b ! a !
+a 0 < ( a -1 * a ! )
+b 0 < ( b -1 * b ! )
+/U (
+  b 0 > /W
+  a b % t !
+  b a !
+  t b !
+)
+a .
+;
+
+:P
+a ! n !
+n 1 < ( `Invalid n` /N /F /W )
+a n >= ( `a >= n` /N /F /W )
+1 x !
+0 max !
+32767 max +!
+/U (
+  x max > /W
+  a x :M dup 1 = ( x . /F /W )
+  x 1 + x !
+)
+`No period` /N
+0 .
+;
+
+:F
+n !
+n 2 < ( `N<2` /N /F /W )
+n 2 % 0 = ( 2 . n 2 / :F /F /W )
+n 3 % 0 = ( 3 . n 3 / :F /F /W )
+/U (
+  /R n 1 - % 2 + a !
+  a n >= ( `Retry` /N /U )
+  a n :G 1 = ( `Coprime fail` /N /U )
+  a n :P r !
+  r 0 = ( `r=0` /N /U )
+  r 2 % 0 = ( `Odd r` /N /U )
+  r 2 / p !
+  a p :M 1 - f !
+  f n :G g !
+  g 1 = g n = | ( `Trivial` /N /U )
+  g . n g / :F
+  /F /W
+)
+;
+
+```
+
+
 > **All functions are < 256 bytes**  
 > **No inline comments**  
 > **Proper RPN stack discipline**  
