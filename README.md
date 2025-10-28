@@ -1,8 +1,8 @@
-# super simple
+ 
 
 ---
 
-### 🧩 What is Shor’s Algorithm?
+# 🧩 What is Shor’s Algorithm?
 
 Shor’s Algorithm is a **special math trick** that runs on a **quantum computer** — a new kind of computer that uses the strange rules of quantum physics.
 
